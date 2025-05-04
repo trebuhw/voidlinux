@@ -118,6 +118,13 @@ This guide provides essential commands for managing packages in Void Linux using
   - **Example**: `xbps-install -R ~/void-packages/hostdir/binpkgs htop`
   - **Note**: Requires root privileges (`sudo`).
 
+- **Install a built package xi > sudo xbps-install -S xtool**:
+
+  - **Command**: `xi <package-name>`
+  - **Description**: Installs a binary package built by `xbps-src` from `hostdir/binpkgs`.
+  - **Example**: `xi htop`
+  - **Note**: Requires root privileges (`sudo`).
+
 - **Search available package templates**:
   - **Command**: `ls srcpkgs/ | grep <name>`
   - **Description**: Lists package templates in `srcpkgs/` matching the given name.

@@ -126,6 +126,7 @@ PACKAGES=(
     xclip
     xdg-user-dirs
     xfce4-notifyd
+    xtools
     yazi
     zathura
     zoxide

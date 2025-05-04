@@ -26,7 +26,7 @@ check_success() {
 }
 
 # Wykrywanie dystrybucji
-if [ -f /etc/void-release ]; then
+if grep -q '^ID=void' /etc/os-release 2>/dev/null || [ -d /run/runit ]; then
     DISTRO="void"
     log "Wykryto dystrybucję: Void Linux"
 else

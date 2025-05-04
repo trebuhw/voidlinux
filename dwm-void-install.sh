@@ -26,7 +26,7 @@ check_success() {
 }
 
 # Wykrywanie dystrybucji
-if [ -f /etc/void-release ]; then
+if grep -q '^ID=void' /etc/os-release 2>/dev/null || [ -d /run/runit ]; then
     DISTRO="void"
     log "Wykryto dystrybucję: Void Linux"
 else
@@ -34,25 +34,96 @@ else
     exit 1
 fi
 
-# Funkcja do synchronizacji repozytoriów Void
+# Funkcja do synchronizacji repozytoriów Void i dodania nonfree
 update_repos() {
+    log "Konfiguracja repozytorium nonfree..."
+    sudo mkdir -p /etc/xbps.d
+    echo "repository=https://repo-default.voidlinux.org/current/nonfree" | sudo tee /etc/xbps.d/10-repository-nonfree.conf > /dev/null
+    check_success "Nie udało się skonfigurować repozytorium nonfree"
+
     log "Aktualizacja repozytoriów..."
     sudo xbps-install -Su
     check_success "Nie udało się zaktualizować repozytoriów"
 }
 
-# Zależności DWM
-install_dwm_deps() {
-    log "Instalacja zależności DWM dla Void Linux..."
-    sudo xbps-install -Sy base-devel libX11-devel libXinerama-devel libXft-devel xorg xorg-server xinit
-    check_success "Nie udało się zainstalować zależności DWM"
+# Zależności dla środowiska graficznego (Xorg i Wayland)
+install_gui_deps() {
+    log "Instalacja zależności dla środowiska graficznego (Xorg i Wayland)..."
+    sudo xbps-install -Sy base-devel hyprland libX11-devel libXft-devel libXinerama-devel libdrm libgbm libinput xorg xorg-server xinit xf86-video-intel
+    check_success "Nie udało się zainstalować zależności środowiska graficznego"
 }
 
-# Pakiety dla Void Linux (odpowiedniki pakietów Arch Linux)
+# Pakiety dla Void Linux
 PACKAGES=(
-    bash-completion bat blueman brightnessctl btop cups curl dunst feh file-roller firefox fish-shell fzf galculator gcc gcr3 gnome-disk-utility gparted gsettings-desktop-schemas gzip htop i3lock kitty mako meld neovim numlockx p7zip-unrar parcellite pavucontrol pdfarranger picom ripgrep rofi rsync scrot stow sxhkd thunar thunar-archive-plugin thunar-volman time trash-cli tree tumbler unrar unzip vim vlc wget xclip xdg-user-dirs xfce4-notifyd zathura zoxide
-    alacritty vscode eza fastfetch font-manager libreoffice libreoffice-i18n-pl polkit-gnome network-manager-applet nsxiv mlocate os-prober sddm starship tldr tlp qt5ct xf86-input-synaptics xf86-video-intel wezterm yazi
-    lm_sensors nwg-look simple-sddm-theme ueberzug waypaper
+    alacritty
+    bash-completion
+    bat
+    blueman
+    brightnessctl
+    btop
+    cups
+    curl
+    dunst
+    eza
+    fastfetch
+    feh
+    file-roller
+    firefox
+    fish-shell
+    fzf
+    galculator
+    gcc
+    gnome-disk-utility
+    gparted
+    gsettings-desktop-schemas
+    gzip
+    htop
+    i3lock
+    kitty
+    libreoffice
+    libreoffice-i18n-pl
+    lm_sensors
+    meld
+    mlocate
+    neovim
+    network-manager-applet
+    nsxiv
+    numlockx
+    os-prober
+    parcellite
+    pavucontrol
+    picom
+    polkit-gnome
+    qt5ct
+    ripgrep
+    rofi
+    rsync
+    sddm
+    scrot
+    slurp
+    starship
+    stow
+    sxhkd
+    Thunar
+    thunar-archive-plugin
+    thunar-volman
+    time
+    tlp
+    trash-cli
+    tree
+    tumbler
+    unzip
+    vim
+    vlc
+    vscode
+    wezterm
+    wget
+    xclip
+    xdg-user-dirs
+    xfce4-notifyd
+    yazi
+    zathura
+    zoxide
 )
 
 # Instalacja pakietów z repozytoriów
@@ -61,6 +132,28 @@ install_repo_packages() {
     log "Instalacja pakietów z repozytoriów (xbps)..."
     sudo xbps-install -Sy "${pkgs[@]}"
     check_success "Nie udało się zainstalować pakietów z xbps"
+
+    # Klonowanie void-packages i konfiguracja xbps-src
+    log "Klonowanie repozytorium void-packages dla przyszłych kompilacji..."
+    sudo xbps-install -Sy git base-devel
+    check_success "Nie udało się zainstalować zależności dla xbps-src"
+
+    if [ -d ~/void-packages ]; then
+        log "Katalog ~/void-packages już istnieje, aktualizowanie..."
+        cd ~/void-packages
+        git pull origin master
+        check_success "Nie udało się zaktualizować void-packages"
+    else
+        log "Klonowanie repozytorium void-packages..."
+        git clone https://github.com/void-linux/void-packages.git ~/void-packages
+        check_success "Nie udało się sklonować void-packages"
+    fi
+
+    cd ~/void-packages
+    ./xbps-src binary-bootstrap
+    check_success "Nie udało się skonfigurować xbps-src"
+    echo "XBPS_ALLOW_RESTRICTED=yes" >> etc/conf
+    check_success "Nie udało się włączyć obsługi pakietów nonfree"
 }
 
 # Specyficzne konfiguracje dla Void Linux
@@ -83,9 +176,12 @@ void_specific_configs() {
     
     # Optymalizacja systemu
     log "Optymalizacja systemu Void..."
+    [ -d /etc/sysctl.d ] || sudo mkdir -p /etc/sysctl.d
+    check_success "Nie udało się utworzyć katalogu /etc/sysctl.d"
     echo "vm.swappiness=10" | sudo tee /etc/sysctl.d/99-swappiness.conf > /dev/null
+    check_success "Nie udało się zapisać konfiguracji vm.swappiness"
     
-    # Optymalizacja SSD (jeśli jest)
+    # Opt摄像头ymalizacja SSD (jeśli jest)
     if [ -d "/sys/block/sda/queue/rotational" ] && [ "$(cat /sys/block/sda/queue/rotational)" -eq 0 ]; then
         log "Wykryto SSD, optymalizacja..."
         echo "vm.vfs_cache_pressure=50" | sudo tee -a /etc/sysctl.d/99-ssd.conf > /dev/null
@@ -94,10 +190,10 @@ void_specific_configs() {
     fi
 
     # Skopiowanie konfiguracji SDDM
-    [ -d /usr/share/sddm/themes/simple-sddm ] && sudo mv /usr/share/sddm/themes/simple-sddm /usr/share/sddm/themes/simple-sddm.bak
+    # [ -d /usr/share/sddm/themes/simple-sddm ] && sudo mv /usr/share/sddm/themes/simple-sddm /usr/share/sddm/themes/simple-sddm.bak
     [ -f /etc/sddm.conf.d ] && sudo mv /etc/sddm.conf.d /etc/sddm.conf.d.bak
-    sudo cp -rv ~/.dotfiles/usr/.config/usr/share/sddm/themes/simple-sddm /usr/share/sddm/themes/
-    sudo cp -rv ~/.dotfiles/etc/.config/sddm.conf.d /etc
+    sudo cp -rfv ~/.dotfiles/usr/.config/usr/share/sddm/themes/. /usr/share/sddm/themes/
+    sudo cp -rfv ~/.dotfiles/etc/.config/sddm.conf.d /etc
 }
 
 # Wykonywanie głównego kodu skryptu
@@ -107,7 +203,7 @@ void_specific_configs() {
 update_repos
 
 # Instalacja zależności
-install_dwm_deps
+install_gui_deps
 
 # Instalacja pakietów
 log "Instalacja pakietów..."
@@ -148,33 +244,6 @@ cd ~/.dotfiles || { error "Nie można przejść do katalogu ~/.dotfiles"; exit 1
 stow Xresources/ alacritty/ background/ bat/ bash/ bin/ btop/ dunst/ fish/ fonts/ gtk-2.0/ gtk-3.0/ gtk-4.0/ gtkrc-2.0/ hypr/ icons/ kitty/ mako/ mc/ nvim/ nsxiv/ parcellite/ qt5ct/ ranger/ rofi/ starship/ suckless/ sublime-text/ themes/ thunar/ tldr/ sxiv/ swappy/ swaylock/ vim/ xfce4/ xinitrc/ xprofile/ yazi/ waybar/ wezterm/ wlogout/ wofi/ zathura/
 check_success "Błąd podczas wykonywania stow"
 
-# Kompilacja i instalacja DWM
-log "Kompilacja i instalacja DWM..."
-cd ~/.config/suckless/dwm || { error "Nie można przejść do katalogu DWM"; exit 1; }
-[ -f config.h ] && rm config.h
-sudo make && sudo make clean install && rm -f config.h
-check_success "Błąd podczas kompilacji DWM"
-
-# Kompilacja i instalacja DMENU
-log "Kompilacja i instalacja DMENU..."
-cd ~/.config/suckless/dmenu || { error "Nie można przejść do katalogu DMENU"; exit 1; }
-[ -f config.h ] && rm config.h
-sudo make && sudo make clean install && rm -f config.h
-check_success "Błąd podczas kompilacji DMENU"
-
-# Kompilacja i instalacja slstatus
-log "Kompilacja i instalacja slstatus..."
-cd ~/.config/suckless/slstatus || { error "Nie można przejść do katalogu slstatus"; exit 1; }
-[ -f config.h ] && rm config.h
-sudo make && sudo make clean install && rm -f config.h
-check_success "Błąd podczas kompilacji slstatus"
-
-# Kompilacja i instalacja st
-log "Kompilacja i instalacja st (terminal)..."
-cd ~/.config/suckless/st || { error "Nie można przejść do katalogu st"; exit 1; }
-sudo make && sudo make clean install
-check_success "Błąd podczas kompilacji st"
-
 # Instalacja pliku .desktop
 log "Kopiowanie pliku .desktop..."
 [ -d /usr/share/xsessions ] || sudo mkdir -p /usr/share/xsessions
@@ -187,7 +256,7 @@ sudo cp ~/.config/suckless/usr/local/bin/start-dwm.sh /usr/local/bin/
 sudo chmod +x /usr/local/bin/start-dwm.sh
 
 log "Instalacja zakończona pomyślnie!"
-log "Aby uruchomić DWM, wyloguj się i wybierz sesję DWM z menedżera logowania."
+log "Aby uruchomić DWM lub Hyprland, wyloguj się i wybierz odpowiednią sesję z menedżera logowania."
 
 # Dodanie czcionek
 sudo fc-cache -fv

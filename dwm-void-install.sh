@@ -63,10 +63,10 @@ PACKAGES=(
     cups
     curl
     dunst
+    elogid
     eza
     fastfetch
     feh
-    file-roller
     firefox
     fish-shell
     fzf
@@ -123,6 +123,7 @@ PACKAGES=(
     vscode
     wezterm
     wget
+    xarchiver
     xclip
     xdg-user-dirs
     xfce4-notifyd

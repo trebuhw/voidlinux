@@ -244,6 +244,33 @@ cd ~/.dotfiles || { error "Nie można przejść do katalogu ~/.dotfiles"; exit 1
 stow Xresources/ alacritty/ background/ bat/ bash/ bin/ btop/ dunst/ fish/ fonts/ gtk-2.0/ gtk-3.0/ gtk-4.0/ gtkrc-2.0/ hypr/ icons/ kitty/ mako/ mc/ nvim/ nsxiv/ parcellite/ qt5ct/ ranger/ rofi/ starship/ suckless/ sublime-text/ themes/ thunar/ tldr/ sxiv/ swappy/ swaylock/ vim/ xfce4/ xinitrc/ xprofile/ yazi/ waybar/ wezterm/ wlogout/ wofi/ zathura/
 check_success "Błąd podczas wykonywania stow"
 
+# Kompilacja i instalacja DWM
+log "Kompilacja i instalacja DWM..."
+cd ~/.config/suckless/dwm || { error "Nie można przejść do katalogu DWM"; exit 1; }
+[ -f config.h ] && rm config.h
+sudo make && sudo make clean install && rm -f config.h
+check_success "Błąd podczas kompilacji DWM"
+
+# Kompilacja i instalacja DMENU
+log "Kompilacja i instalacja DMENU..."
+cd ~/.config/suckless/dmenu || { error "Nie można przejść do katalogu DMENU"; exit 1; }
+[ -f config.h ] && rm config.h
+sudo make && sudo make clean install && rm -f config.h
+check_success "Błąd podczas kompilacji DMENU"
+
+# Kompilacja i instalacja slstatus
+log "Kompilacja i instalacja slstatus..."
+cd ~/.config/suckless/slstatus || { error "Nie można przejść do katalogu slstatus"; exit 1; }
+[ -f config.h ] && rm config.h
+sudo make && sudo make clean install && rm -f config.h
+check_success "Błąd podczas kompilacji slstatus"
+
+# Kompilacja i instalacja st
+# log "Kompilacja i instalacja st (terminal)..."
+# cd ~/.config/suckless/st || { error "Nie można przejść do katalogu st"; exit 1; }
+# sudo make && sudo make clean install
+# check_success "Błąd podczas kompilacji st"
+
 # Instalacja pliku .desktop
 log "Kopiowanie pliku .desktop..."
 [ -d /usr/share/xsessions ] || sudo mkdir -p /usr/share/xsessions

@@ -182,6 +182,7 @@ void_specific_configs() {
     
     # Włączanie i uruchamianie usług (korzystamy z runit zamiast systemd)
     log "Konfiguracja usług systemowych (runit)..."
+    sudo ln -s /etc/sv/elogind /var/service/
     sudo ln -sf /etc/sv/NetworkManager /var/service/
     sudo ln -sf /etc/sv/cupsd /var/service/
     sudo ln -sf /etc/sv/dbus /var/service/ # Potrzebne dla wielu usług

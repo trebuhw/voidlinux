@@ -50,7 +50,7 @@ install_dwm_deps() {
 
 # Pakiety dla Void Linux (odpowiedniki pakietów Arch Linux)
 PACKAGES=(
-    bash-completion bat blueman brightnessctl btop cups curl dunst feh file-roller firefox fish fzf galculator gcc gcr3 gnome-disk-utility gparted gsettings-desktop-schemas gzip htop i3lock kitty mako meld neovim numlockx p7zip-unrar parcellite pavucontrol pdfarranger picom ripgrep rofi rsync scrot stow sxhkd thunar thunar-archive-plugin thunar-volman time trash-cli tree tumbler unrar unzip vim vlc wget xclip xdg-user-dirs xfce4-notifyd zathura zoxide
+    bash-completion bat blueman brightnessctl btop cups curl dunst feh file-roller firefox fish-shell fzf galculator gcc gcr3 gnome-disk-utility gparted gsettings-desktop-schemas gzip htop i3lock kitty mako meld neovim numlockx p7zip-unrar parcellite pavucontrol pdfarranger picom ripgrep rofi rsync scrot stow sxhkd thunar thunar-archive-plugin thunar-volman time trash-cli tree tumbler unrar unzip vim vlc wget xclip xdg-user-dirs xfce4-notifyd zathura zoxide
     alacritty vscode eza fastfetch font-manager libreoffice libreoffice-i18n-pl polkit-gnome network-manager-applet nsxiv mlocate os-prober sddm starship tldr tlp qt5ct xf86-input-synaptics xf86-video-intel wezterm yazi
     lm_sensors nwg-look simple-sddm-theme ueberzug waypaper
 )

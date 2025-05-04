@@ -34,8 +34,13 @@ else
     exit 1
 fi
 
-# Funkcja do synchronizacji repozytoriów Void
+# Funkcja do synchronizacji repozytoriów Void i dodania nonfree
 update_repos() {
+    log "Konfiguracja repozytorium nonfree..."
+    sudo mkdir -p /etc/xbps.d
+    echo "repository=https://repo-default.voidlinux.org/current/nonfree" | sudo tee /etc/xbps.d/10-repository-nonfree.conf > /dev/null
+    check_success "Nie udało się skonfigurować repozytorium nonfree"
+
     log "Aktualizacja repozytoriów..."
     sudo xbps-install -Su
     check_success "Nie udało się zaktualizować repozytoriów"
@@ -66,7 +71,7 @@ PACKAGES=(
     feh
     file-roller
     firefox
-    fish
+    fish-shell
     font-manager
     foot
     fzf
@@ -74,6 +79,7 @@ PACKAGES=(
     gcc
     gcr3
     gnome-disk-utility
+    google-chrome
     gparted
     grim
     gsettings-desktop-schemas
@@ -94,7 +100,6 @@ PACKAGES=(
     os-prober
     parcellite
     pavucontrol
-    pdfarranger
     picom
     polkit-gnome
     qt5ct
@@ -103,7 +108,6 @@ PACKAGES=(
     rsync
     sddm
     scrot
-    simple-sddm-theme
     slurp
     starship
     stow
@@ -144,12 +148,11 @@ install_repo_packages() {
     sudo xbps-install -Sy "${pkgs[@]}"
     check_success "Nie udało się zainstalować pakietów z xbps"
 
-    # Instalacja Google Chrome
-    log "Instalacja Google Chrome za pomocą xbps-src..."
+    # Klonowanie void-packages i konfiguracja xbps-src
+    log "Klonowanie repozytorium void-packages dla przyszłych kompilacji..."
     sudo xbps-install -Sy git base-devel
     check_success "Nie udało się zainstalować zależności dla xbps-src"
 
-    # Klonowanie void-packages
     if [ -d ~/void-packages ]; then
         log "Katalog ~/void-packages już istnieje, aktualizowanie..."
         cd ~/void-packages
@@ -161,25 +164,11 @@ install_repo_packages() {
         check_success "Nie udało się sklonować void-packages"
     fi
 
-    # Konfiguracja xbps-src
     cd ~/void-packages
     ./xbps-src binary-bootstrap
     check_success "Nie udało się skonfigurować xbps-src"
     echo "XBPS_ALLOW_RESTRICTED=yes" >> etc/conf
     check_success "Nie udało się włączyć obsługi pakietów nonfree"
-
-    # Kompilacja i instalacja google-chrome
-    log "Kompilacja pakietu google-chrome..."
-    ./xbps-src pkg google-chrome
-    check_success "Nie udało się skompilować google-chrome"
-    sudo xbps-install --repository=hostdir/binpkgs/nonfree google-chrome
-    check_success "Nie udało się zainstalować google-chrome"
-
-    # Aktualizacja google-chrome
-    # cd ~/void-packages
-    # git pull origin master
-    # ./xbps-src pkg google-chrome
-    # sudo xbps-install --repository=hostdir/binpkgs/nonfree google-chrome
 }
 
 # Specyficzne konfiguracje dla Void Linux
@@ -204,7 +193,7 @@ void_specific_configs() {
     log "Optymalizacja systemu Void..."
     echo "vm.swappiness=10" | sudo tee /etc/sysctl.d/99-swappiness.conf > /dev/null
     
-    # Optymalizacja SSD (jeśli jest)
+    # Opt摄像头ymalizacja SSD (jeśli jest)
     if [ -d "/sys/block/sda/queue/rotational" ] && [ "$(cat /sys/block/sda/queue/rotational)" -eq 0 ]; then
         log "Wykryto SSD, optymalizacja..."
         echo "vm.vfs_cache_pressure=50" | sudo tee -a /etc/sysctl.d/99-ssd.conf > /dev/null

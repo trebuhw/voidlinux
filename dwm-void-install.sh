@@ -55,7 +55,6 @@ install_gui_deps() {
 
 # Pakiety dla Void Linux
 PACKAGES=(
-    alacritty
     bash-completion
     bat
     blueman
@@ -79,7 +78,6 @@ PACKAGES=(
     gzip
     htop
     i3lock
-    kitty
     libreoffice
     libreoffice-i18n-pl
     lm_sensors
@@ -255,7 +253,7 @@ log "Tworzenie kopii zapasowych plików konfiguracyjnych..."
 # Stow
 log "Tworzenie symlinków za pomocą stow..."
 cd ~/.dotfiles || { error "Nie można przejść do katalogu ~/.dotfiles"; exit 1; }
-stow Xresources/ alacritty/ background/ bat/ bash/ bin/ btop/ dunst/ fish/ fonts/ gtk-2.0/ gtk-3.0/ gtk-4.0/ gtkrc-2.0/ hypr/ icons/ kitty/ mako/ mc/ nvim/ nsxiv/ parcellite/ qt5ct/ ranger/ rofi/ starship/ suckless/ sublime-text/ themes/ thunar/ tldr/ sxiv/ swappy/ swaylock/ vim/ vscode/ xfce4/ xinitrc/ xprofile/ yazi/ waybar/ wezterm/ wlogout/ wofi/ zathura/
+stow Xresources/ background/ bat/ bash/ bin/ btop/ dunst/ fish/ fonts/ gtk-2.0/ gtk-3.0/ gtk-4.0/ gtkrc-2.0/ hypr/ icons/ mako/ mc/ nvim/ nsxiv/ parcellite/ qt5ct/ ranger/ rofi/ starship/ suckless/ sublime-text/ themes/ thunar/ tldr/ sxiv/ swappy/ swaylock/ vim/ vscode/ xfce4/ xinitrc/ xprofile/ yazi/ waybar/ wezterm/ wlogout/ wofi/ zathura/
 check_success "Błąd podczas wykonywania stow"
 
 # Kompilacja i instalacja DWM
@@ -301,6 +299,9 @@ log "Aby uruchomić DWM lub Hyprland, wyloguj się i wybierz odpowiednią sesję
 
 # Dodanie czcionek
 sudo fc-cache -fv
+
+# Update katalogi w home
+xdg-user-dirs update
 
 # Ustawienie theme gtk
 gsettings set org.gnome.desktop.interface cursor-theme 'Bibata-Modern-Ice'

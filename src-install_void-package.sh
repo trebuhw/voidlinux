@@ -99,7 +99,7 @@ if [ -f "hostdir/binpkgs/nonfree/$SELECTED_PACKAGE"*.xbps ]; then
     sudo xbps-install --repository=hostdir/binpkgs/nonfree "$SELECTED_PACKAGE"
 else
     log "Instalacja pakietu $SELECTED_PACKAGE z repozytorium standardowego..."
-    sudo xbps-install --repository=hostdir/binpkgs "$SELECTED_PACKAGE"
+    sudo xbps-install --repository=hostdir/binpkgs/nonfree "$SELECTED_PACKAGE"
 fi
 check_success "Nie udało się zainstalować pakietu $SELECTED_PACKAGE"
 

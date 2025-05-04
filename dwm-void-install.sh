@@ -85,10 +85,12 @@ PACKAGES=(
     lm_sensors
     meld
     mlocate
+    nano
     neovim
     network-manager-applet
     nsxiv
     numlockx
+    nwg-look
     os-prober
     parcellite
     pavucontrol
@@ -108,6 +110,7 @@ PACKAGES=(
     thunar-archive-plugin
     thunar-volman
     time
+    tldr
     tlp
     trash-cli
     tree
@@ -163,6 +166,8 @@ install_repo_packages() {
     cd ~/void-packages
     ./xbps-src pkg google-chrome
     sudo xbps-install -R hostdir/binpkgs/nonfree google-chrome
+    ./xbps-src clean
+    ./xbps-src zap
 }
 
 # Specyficzne konfiguracje dla Void Linux
@@ -250,7 +255,7 @@ log "Tworzenie kopii zapasowych plików konfiguracyjnych..."
 # Stow
 log "Tworzenie symlinków za pomocą stow..."
 cd ~/.dotfiles || { error "Nie można przejść do katalogu ~/.dotfiles"; exit 1; }
-stow Xresources/ alacritty/ background/ bat/ bash/ bin/ btop/ dunst/ fish/ fonts/ gtk-2.0/ gtk-3.0/ gtk-4.0/ gtkrc-2.0/ hypr/ icons/ kitty/ mako/ mc/ nvim/ nsxiv/ parcellite/ qt5ct/ ranger/ rofi/ starship/ suckless/ sublime-text/ themes/ thunar/ tldr/ sxiv/ swappy/ swaylock/ vim/ xfce4/ xinitrc/ xprofile/ yazi/ waybar/ wezterm/ wlogout/ wofi/ zathura/
+stow Xresources/ alacritty/ background/ bat/ bash/ bin/ btop/ dunst/ fish/ fonts/ gtk-2.0/ gtk-3.0/ gtk-4.0/ gtkrc-2.0/ hypr/ icons/ kitty/ mako/ mc/ nvim/ nsxiv/ parcellite/ qt5ct/ ranger/ rofi/ starship/ suckless/ sublime-text/ themes/ thunar/ tldr/ sxiv/ swappy/ swaylock/ vim/ vscode/ xfce4/ xinitrc/ xprofile/ yazi/ waybar/ wezterm/ wlogout/ wofi/ zathura/
 check_success "Błąd podczas wykonywania stow"
 
 # Kompilacja i instalacja DWM

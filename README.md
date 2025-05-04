@@ -113,7 +113,7 @@ This guide provides essential commands for managing packages in Void Linux using
 
 - **Install a built package**:
 
-  - **Command**: `xbps-install -R hostdir/binpkgs <package-name>`
+  - **Command**: `xbps-install -R hostdir/binpkgs/nonfree <package-name>`
   - **Description**: Installs a binary package built by `xbps-src` from `hostdir/binpkgs`.
   - **Example**: `xbps-install -R ~/void-packages/hostdir/binpkgs htop`
   - **Note**: Requires root privileges (`sudo`).

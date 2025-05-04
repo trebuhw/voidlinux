@@ -158,12 +158,12 @@ install_repo_packages() {
     check_success "Nie udało się skonfigurować xbps-src"
     sudo echo "XBPS_ALLOW_RESTRICTED=yes" >> etc/conf
     check_success "Nie udało się włączyć obsługi pakietów nonfree"
-}
 
-# Instalacja google-chrome
+    # Instalacja google-chrome
     cd ~/void-packages
     sudo ./xbps-src pkg google-chrome
     sudo xbps-install -R hostdir/binpkgs/nonfree google-chrome
+}
 
 # Specyficzne konfiguracje dla Void Linux
 void_specific_configs() {

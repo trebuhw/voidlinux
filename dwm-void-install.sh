@@ -112,7 +112,11 @@ PACKAGES=(
     trash-cli
     tree
     tumbler
+    qt5-quickcontrols2
+    qt5-graphicaleffects
+    qt5-svg
     unzip
+    void-repo-nonfree
     vim
     vlc
     vscode
@@ -152,9 +156,14 @@ install_repo_packages() {
     cd ~/void-packages
     ./xbps-src binary-bootstrap
     check_success "Nie udało się skonfigurować xbps-src"
-    echo "XBPS_ALLOW_RESTRICTED=yes" >> etc/conf
+    sudo echo "XBPS_ALLOW_RESTRICTED=yes" >> etc/conf
     check_success "Nie udało się włączyć obsługi pakietów nonfree"
 }
+
+# Instalacja google-chrome
+    cd ~/void-packages
+    sudo ./xbps-src pkg google-chrome
+    sudo xbps-install -R hostdir/binpkgs/nonfree google-chrome
 
 # Specyficzne konfiguracje dla Void Linux
 void_specific_configs() {

@@ -161,7 +161,7 @@ install_repo_packages() {
 
     # Instalacja google-chrome
     cd ~/void-packages
-    sudo ./xbps-src pkg google-chrome
+    ./xbps-src pkg google-chrome
     sudo xbps-install -R hostdir/binpkgs/nonfree google-chrome
 }
 

@@ -49,7 +49,7 @@ update_repos() {
 # Zależności dla środowiska graficznego (Xorg i Wayland)
 install_gui_deps() {
     log "Instalacja zależności dla środowiska graficznego (Xorg i Wayland)..."
-    sudo xbps-install -Sy base-devel libX11-devel libXft-devel libXinerama-devel libdrm libgbm libinput xorg xorg-server xinit xf86-video-intel
+    sudo xbps-install -Sy base-devel freetype-devel fontconfig-devel libX11-devel libXft-devel libXinerama-devel libdrm libgbm libinput xorg xorg-server xinit xf86-video-intel
     check_success "Nie udało się zainstalować zależności środowiska graficznego"
 }
 

@@ -69,6 +69,7 @@ PACKAGES=(
     feh
     firefox
     fish-shell
+    fuse3
     fzf
     galculator
     gcc
@@ -95,6 +96,7 @@ PACKAGES=(
     picom
     polkit-gnome
     qt5ct
+    rclone
     ripgrep
     rofi
     rsync

@@ -319,15 +319,15 @@ ln -sf ~/.config/gtk-3.0/settings.ini ~/.config/gtk-4.0/settings.ini
 
 # Ustawienie konfiguracji programów root
 sudo mkdir -p /root/.config/
-sudo ln -sf ~/dotfiles/gtkrc-2.0/.gtkrc-2.0 /root/.gtkrc-2.0
-sudo ln -sf ~/dotfiles/vim/.vimrc /root/.vimrc
-sudo ln -sf ~/dotfiles/vim/.viminfo /root/.viminfo
-sudo ln -sf ~/dotfiles/nvim/.config/nvim /root/.config/nvim
-sudo ln -sf ~/dotfiles/mc/.config/mc /root/.config/mc
-sudo ln -sf ~/dotfiles/gtk-4.0/.config/gtk-4.0 /root/.config/gtk-4.0
-sudo ln -sf ~/dotfiles/gtk-3.0/.config/gtk-3.0 /root/.config/gtk-3.0
-sudo ln -sf ~/dotfiles/gtk-2.0/.config/gtk-2.0 /root/.config/gtk-2.0
-sudo ln -sf ~/dotfiles/ranger/.config/ranger /root/.config/ranger
+sudo ln -sf ~/.dotfiles/gtkrc-2.0/.gtkrc-2.0 /root/.gtkrc-2.0
+sudo ln -sf ~/.dotfiles/vim/.vimrc /root/.vimrc
+sudo ln -sf ~/.dotfiles/vim/.viminfo /root/.viminfo
+sudo ln -sf ~/.dotfiles/nvim/.config/nvim /root/.config/nvim
+sudo ln -sf ~/.dotfiles/mc/.config/mc /root/.config/mc
+sudo ln -sf ~/.dotfiles/gtk-4.0/.config/gtk-4.0 /root/.config/gtk-4.0
+sudo ln -sf ~/.dotfiles/gtk-3.0/.config/gtk-3.0 /root/.config/gtk-3.0
+sudo ln -sf ~/.dotfiles/gtk-2.0/.config/gtk-2.0 /root/.config/gtk-2.0
+sudo ln -sf ~/.dotfiles/ranger/.config/ranger /root/.config/ranger
 
 # TLP
 [ -f /etc/tlp.conf ] && sudo mv /etc/tlp.conf /etc/tlp.conf.back

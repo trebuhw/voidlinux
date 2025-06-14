@@ -79,6 +79,7 @@ PACKAGES=(
     gzip
     htop
     i3lock
+    intel-ucode
     libreoffice
     libreoffice-i18n-pl
     lm_sensors
